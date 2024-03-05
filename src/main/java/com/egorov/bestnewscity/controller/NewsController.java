@@ -3,7 +3,9 @@ package com.egorov.bestnewscity.controller;
 
 import com.egorov.bestnewscity.appService.NewsService;
 import com.egorov.bestnewscity.model.CategoryNews;
+import com.egorov.bestnewscity.model.dto.NewsCreateModel;
 import com.egorov.bestnewscity.model.dto.NewsDto;
+import com.egorov.bestnewscity.model.dto.NewsUpdateModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,15 +39,15 @@ public class NewsController {
 
 
     @PostMapping("/create")
-    public Mono<ResponseEntity<NewsDto>> creatNews(@RequestBody @Valid NewsDto newsDto) {
-        return newsService.createdNews(newsDto)
+    public Mono<ResponseEntity<NewsDto>> creatNews(@RequestBody @Valid NewsCreateModel newsCreateModel) {
+        return newsService.createdNews(newsCreateModel)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
     @PutMapping("/update/{id}")
-    public Mono<ResponseEntity<NewsDto>> updateNews(@PathVariable String id, @RequestBody @Valid NewsDto newsDto) {
-        return newsService.updateNews(id, newsDto)
+    public Mono<ResponseEntity<NewsDto>> updateNews(@PathVariable String id, @RequestBody @Valid NewsUpdateModel newsUpdateModel) {
+        return newsService.updateNews(id, newsUpdateModel)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
