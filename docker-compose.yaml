@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: 'mongo:4.4.0-rc8-bionic'
+    container_name: 'mongo-news'
+    restart: on-failure
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root1234
+
+  rabbitmq:
+    image: 'rabbitmq:3.9.29-management-alpine'
+    container_name: 'rabbitmq-news'
+    restart: on-failure
+    ports:
+      - 15673:15672
+      - 5673:5672
+    volumes:
+      - rabbitmq-news-data:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: 1234
+
+
+volumes:
+  mongo-data:
+  rabbitmq-news-data:
