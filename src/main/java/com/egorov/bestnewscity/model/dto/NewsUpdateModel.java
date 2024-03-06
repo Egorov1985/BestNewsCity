@@ -1,6 +1,6 @@
 package com.egorov.bestnewscity.model.dto;
 
-import com.egorov.bestnewscity.model.CategoryNews;
+import com.egorov.bestnewscity.model.entity.CategoryNews;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;

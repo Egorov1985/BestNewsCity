@@ -1,6 +1,6 @@
-package com.egorov.bestnewscity.model;
+package com.egorov.bestnewscity.model.entity;
 
-import jakarta.validation.constraints.NotNull;
+import com.egorov.bestnewscity.model.entity.CategoryNews;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,5 +28,5 @@ public class News {
     private List<CategoryNews> category;
     private LocalDate createDateAtNews;
     private LocalTime createTimeAtNews;
-    private LocalDate updateDateAtNews;
+    private String updateDateAtNews;
 }

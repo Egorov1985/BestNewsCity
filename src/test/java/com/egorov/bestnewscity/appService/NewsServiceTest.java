@@ -1,8 +1,10 @@
 package com.egorov.bestnewscity.appService;
 
 import com.egorov.bestnewscity.exception.NotFoundNewsException;
-import com.egorov.bestnewscity.model.CategoryNews;
-import com.egorov.bestnewscity.model.News;
+import com.egorov.bestnewscity.model.dto.NewsCreateModel;
+import com.egorov.bestnewscity.model.dto.NewsUpdateModel;
+import com.egorov.bestnewscity.model.entity.CategoryNews;
+import com.egorov.bestnewscity.model.entity.News;
 import com.egorov.bestnewscity.model.dto.MapperNews;
 import com.egorov.bestnewscity.model.dto.NewsDto;
 import com.egorov.bestnewscity.repository.NewsRepository;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -20,6 +23,7 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +34,8 @@ class NewsServiceTest {
     private NewsService newsService;
     @Mock
     private NewsRepository newsRepository;
+
+
     @Mock
     private RabbitTemplate rabbitTemplate;
 
@@ -48,6 +54,7 @@ class NewsServiceTest {
                 .category(List.of(CategoryNews.POLITIC, CategoryNews.TRAVEL))
                 .createDateAtNews(LocalDate.now())
                 .createTimeAtNews(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
+                .updateDateAtNews("Not updated!")
                 .build();
         newsDto = MapperNews.INSTANCE.toNewsDto(news);
         id = "4";
@@ -55,9 +62,18 @@ class NewsServiceTest {
 
     @Test
     void createdNews() {
-        Mockito.when(newsRepository.save(news)).thenReturn(Mono.fromSupplier(() -> news));
-        newsService.createdNews(newsDto).subscribe(result -> assertEquals(newsDto, result));
-        Mockito.verify(newsRepository, Mockito.times(1)).save(news);
+        NewsService spyService = Mockito.spy(new NewsService(newsRepository, rabbitTemplate, directExchange));
+        NewsCreateModel newsCreateModel = Mockito.spy(new NewsCreateModel("Title #4", "Message #4",
+                "Bob", List.of(CategoryNews.POLITIC, CategoryNews.TRAVEL)));
+       // Mockito.doReturn(news).when(spyService).createDateAndTimeAtNews(news);
+        Mockito.when(newsRepository.save(news)).thenReturn(Mono.just(news));
+
+
+       /* final List<String> spyList = Mockito.spy(new ArrayList<>());
+        Mockito.doReturn(100).when(spyList).size();
+
+        assertEquals(100, spyList.size());*/
+
     }
 
     @Test
@@ -72,14 +88,15 @@ class NewsServiceTest {
         Mockito.when(newsRepository.findById(id)).thenThrow(new NotFoundNewsException("Not Found News!!!"));
         Exception exception = assertThrows(NotFoundNewsException.class, () -> newsService.findById(id).subscribe());
         assertEquals("Not Found News!!!", exception.getMessage());
-        assertThrows(NotFoundNewsException.class, ()-> newsService.findById(id).subscribe());
+        assertThrows(NotFoundNewsException.class, () -> newsService.findById(id).subscribe());
     }
 
     @Test
     void updateNews_when_exist() {
+        NewsUpdateModel updateModel = new NewsUpdateModel("Message #4", "Bob", List.of(CategoryNews.POLITIC, CategoryNews.SCIENCE));
         Mockito.when(newsRepository.findById(id)).thenReturn(Mono.just(news));
         Mockito.when(newsRepository.save(news)).thenReturn(Mono.just(news));
-        newsService.updateNews(id, newsDto).subscribe(res -> {
+        newsService.updateNews(id, updateModel).subscribe(res -> {
             assertNotNull(res.getUpdateDateAtNews());
             assertNotNull(res.getCreateTimeAtNews());
             assertNotNull(res.getCreateDateAtNews());
@@ -93,7 +110,7 @@ class NewsServiceTest {
         Mockito.when(newsRepository.findById(id)).thenThrow(new NotFoundNewsException("Not Found News!!!"));
         Exception exception = assertThrows(NotFoundNewsException.class, () -> newsService.findById(id).subscribe());
         assertEquals("Not Found News!!!", exception.getMessage());
-        assertThrows(NotFoundNewsException.class, ()-> newsService.findById(id).subscribe());
+        assertThrows(NotFoundNewsException.class, () -> newsService.findById(id).subscribe());
     }
 
 

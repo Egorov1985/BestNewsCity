@@ -1,6 +1,6 @@
 package com.egorov.bestnewscity.model.dto;
 
-import com.egorov.bestnewscity.model.CategoryNews;
+import com.egorov.bestnewscity.model.entity.CategoryNews;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +23,4 @@ public class NewsCreateModel {
     private String author;
     @NotNull (message = "{news.validation.category}")
     private List<CategoryNews> category;
-    private LocalDate createDateAtNews;
-    private LocalTime createTimeAtNews;
 }

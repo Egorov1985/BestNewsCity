@@ -1,6 +1,6 @@
 package com.egorov.bestnewscity.model.dto;
 
-import com.egorov.bestnewscity.model.CategoryNews;
+import com.egorov.bestnewscity.model.entity.CategoryNews;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +28,6 @@ public class NewsDto {
     private List<CategoryNews> category;
     private LocalDate createDateAtNews;
     private LocalTime createTimeAtNews;
-    private LocalDate updateDateAtNews;
+    private String updateDateAtNews;
 }
 

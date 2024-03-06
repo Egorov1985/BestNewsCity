@@ -1,7 +1,7 @@
 package com.egorov.bestnewscity.configuration;
 
 
-import com.egorov.bestnewscity.model.CategoryNews;
+import com.egorov.bestnewscity.model.entity.CategoryNews;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;

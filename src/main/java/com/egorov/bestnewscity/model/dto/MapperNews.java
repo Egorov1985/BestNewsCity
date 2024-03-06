@@ -1,10 +1,11 @@
 package com.egorov.bestnewscity.model.dto;
 
-import com.egorov.bestnewscity.model.News;
+import com.egorov.bestnewscity.model.entity.News;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Mapper
 public interface MapperNews {
@@ -17,11 +18,5 @@ public interface MapperNews {
 
     News toNews(NewsCreateModel newsCreateModel);
 
-    default void updateNews(News news, NewsUpdateModel newsUpdateModel){
-        news.setTitle(news.getTitle());
-        news.setMessage(newsUpdateModel.getMessage());
-        news.setCategory(newsUpdateModel.getCategory());
-        news.setUpdateDateAtNews(LocalDate.now());
-    };
 
 }

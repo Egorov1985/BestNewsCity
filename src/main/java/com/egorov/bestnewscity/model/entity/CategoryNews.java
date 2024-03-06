@@ -1,4 +1,4 @@
-package com.egorov.bestnewscity.model;
+package com.egorov.bestnewscity.model.entity;
 
 public enum CategoryNews {
     ECONOMIC,

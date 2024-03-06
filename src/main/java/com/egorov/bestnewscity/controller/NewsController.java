@@ -2,7 +2,6 @@ package com.egorov.bestnewscity.controller;
 
 
 import com.egorov.bestnewscity.appService.NewsService;
-import com.egorov.bestnewscity.model.CategoryNews;
 import com.egorov.bestnewscity.model.dto.NewsCreateModel;
 import com.egorov.bestnewscity.model.dto.NewsDto;
 import com.egorov.bestnewscity.model.dto.NewsUpdateModel;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

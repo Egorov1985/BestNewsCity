@@ -1,6 +1,6 @@
 package com.egorov.bestnewscity.repository;
 
-import com.egorov.bestnewscity.model.News;
+import com.egorov.bestnewscity.model.entity.News;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Flux;
 
