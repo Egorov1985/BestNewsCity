@@ -2,6 +2,7 @@ package com.egorov.bestnewscity.controller;
 
 
 import com.egorov.bestnewscity.appService.NewsService;
+import com.egorov.bestnewscity.model.dto.MapperNews;
 import com.egorov.bestnewscity.model.dto.NewsCreateModel;
 import com.egorov.bestnewscity.model.dto.NewsDto;
 import com.egorov.bestnewscity.model.dto.NewsUpdateModel;
@@ -39,8 +40,8 @@ public class NewsController {
     @PostMapping("/create")
     public Mono<ResponseEntity<NewsDto>> creatNews(@RequestBody @Valid NewsCreateModel newsCreateModel) {
         return newsService.createdNews(newsCreateModel)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+                .map(newsDto -> new ResponseEntity<>(newsDto, HttpStatus.CREATED))
+                .switchIfEmpty(Mono.just(new ResponseEntity<>(HttpStatus.BAD_REQUEST)));
     }
 
     @PutMapping("/update/{id}")

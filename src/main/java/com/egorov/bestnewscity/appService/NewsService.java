@@ -44,7 +44,6 @@ public class NewsService implements INewsService {
                         category.toString(), newsCreateModel);
             }
         }
-
         return newsRepository.save(createDateAndTimeAtNews(MapperNews.INSTANCE.toNews(newsCreateModel)))
                 .map(MapperNews.INSTANCE::toNewsDto);
     }

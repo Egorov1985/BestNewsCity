@@ -1,12 +1,12 @@
 package com.egorov.bestnewscity.appService;
 
 import com.egorov.bestnewscity.exception.NotFoundNewsException;
+import com.egorov.bestnewscity.model.dto.MapperNews;
 import com.egorov.bestnewscity.model.dto.NewsCreateModel;
+import com.egorov.bestnewscity.model.dto.NewsDto;
 import com.egorov.bestnewscity.model.dto.NewsUpdateModel;
 import com.egorov.bestnewscity.model.entity.CategoryNews;
 import com.egorov.bestnewscity.model.entity.News;
-import com.egorov.bestnewscity.model.dto.MapperNews;
-import com.egorov.bestnewscity.model.dto.NewsDto;
 import com.egorov.bestnewscity.repository.NewsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,6 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,8 +34,7 @@ class NewsServiceTest {
     @Mock
     private NewsRepository newsRepository;
 
-
-    @Mock
+    @Spy
     private RabbitTemplate rabbitTemplate;
 
     @Mock
@@ -62,11 +60,11 @@ class NewsServiceTest {
 
     @Test
     void createdNews() {
-        NewsService spyService = Mockito.spy(new NewsService(newsRepository, rabbitTemplate, directExchange));
-        NewsCreateModel newsCreateModel = Mockito.spy(new NewsCreateModel("Title #4", "Message #4",
-                "Bob", List.of(CategoryNews.POLITIC, CategoryNews.TRAVEL)));
-       // Mockito.doReturn(news).when(spyService).createDateAndTimeAtNews(news);
-        Mockito.when(newsRepository.save(news)).thenReturn(Mono.just(news));
+        NewsCreateModel newsCreateModel = Mockito.spy(new NewsCreateModel("Title #4",
+                "Message #4", "Bob", List.of(CategoryNews.POLITIC, CategoryNews.TRAVEL)));
+        Mockito.doNothing().when(MapperNews.INSTANCE).toNews(newsCreateModel);
+        //Mockito.doReturn(news).when(newsService).createDateAndTimeAtNews(MapperNews.INSTANCE.toNews(newsCreateModel));
+
 
 
        /* final List<String> spyList = Mockito.spy(new ArrayList<>());
