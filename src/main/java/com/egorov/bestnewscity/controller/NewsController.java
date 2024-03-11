@@ -38,9 +38,9 @@ public class NewsController {
 
 
     @PostMapping("/create")
-    public Mono<ResponseEntity<NewsDto>> creatNews(@RequestBody @Valid NewsCreateModel newsCreateModel) {
-        return newsService.createdNews(newsCreateModel)
-                .map(newsDto -> new ResponseEntity<>(newsDto, HttpStatus.CREATED))
+    public Mono<ResponseEntity<NewsDto>> creatNews(@RequestBody @Valid NewsDto newsDto) {
+        return newsService.createdNews(newsDto)
+                .map(dto -> new ResponseEntity<>(dto, HttpStatus.CREATED))
                 .switchIfEmpty(Mono.just(new ResponseEntity<>(HttpStatus.BAD_REQUEST)));
     }
 

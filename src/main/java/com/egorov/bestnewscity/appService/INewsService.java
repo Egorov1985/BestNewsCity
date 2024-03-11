@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface INewsService {
 
-    Mono<NewsDto> createdNews(NewsCreateModel newsModel);
+    Mono<NewsDto> createdNews(NewsDto newsDto);
 
     Mono<NewsDto> findById(String id);
 

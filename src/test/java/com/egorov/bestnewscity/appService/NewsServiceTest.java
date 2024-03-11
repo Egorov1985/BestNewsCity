@@ -60,17 +60,6 @@ class NewsServiceTest {
 
     @Test
     void createdNews() {
-        NewsCreateModel newsCreateModel = Mockito.spy(new NewsCreateModel("Title #4",
-                "Message #4", "Bob", List.of(CategoryNews.POLITIC, CategoryNews.TRAVEL)));
-        Mockito.doNothing().when(MapperNews.INSTANCE).toNews(newsCreateModel);
-        //Mockito.doReturn(news).when(newsService).createDateAndTimeAtNews(MapperNews.INSTANCE.toNews(newsCreateModel));
-
-
-
-       /* final List<String> spyList = Mockito.spy(new ArrayList<>());
-        Mockito.doReturn(100).when(spyList).size();
-
-        assertEquals(100, spyList.size());*/
 
     }
 

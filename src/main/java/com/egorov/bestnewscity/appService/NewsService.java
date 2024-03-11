@@ -37,16 +37,16 @@ public class NewsService implements INewsService {
     private final DirectExchange directExchange;
 
     @Override
-    public Mono<NewsDto> createdNews(NewsCreateModel newsCreateModel) {
-        for (CategoryNews category : CategoryNews.values()) {
-            if (newsCreateModel.getCategory().contains(category)) {
-                rabbitTemplate.convertAndSend(directExchange.getName(),
-                        category.toString(), newsCreateModel);
-            }
-        }
-        return newsRepository.save(createDateAndTimeAtNews(MapperNews.INSTANCE.toNews(newsCreateModel)))
-                .map(MapperNews.INSTANCE::toNewsDto);
+    public Mono<NewsDto> createdNews(NewsDto newsDto) {
+        newsDto.setCreateDateAtNews(LocalDate.now());
+        newsDto.setCreateTimeAtNews(LocalTime.now().truncatedTo(ChronoUnit.MINUTES));
+        newsDto.setUpdateDateAtNews("Not updated!!!");
+
+       return newsRepository.save(MapperNews.INSTANCE.toNews(newsDto)).doOnNext(this::sendNewsAlert)
+               .doOnNext(news -> newsDto.setId(news.getId()))
+               .thenReturn(newsDto);
     }
+
 
     @Override
     public Mono<NewsDto> findById(String id) {
@@ -97,6 +97,15 @@ public class NewsService implements INewsService {
             news.setUpdateDateAtNews("Last updated "  + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm")));
             return news;
         }).then();
+    }
+    private void sendNewsAlert(News news) {
+        for (CategoryNews category : CategoryNews.values()) {
+            if (news.getCategory().contains(category)) {
+                rabbitTemplate.convertAndSend(directExchange.getName(),
+                        category.toString(), "New news in the category " + category + "! " +
+                                "To read it, follow the link " + "http://localhost:8080/api/news/" + news.getId());
+            }
+        }
     }
 
 
