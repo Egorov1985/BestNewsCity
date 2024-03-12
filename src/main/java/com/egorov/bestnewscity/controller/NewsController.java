@@ -2,6 +2,7 @@ package com.egorov.bestnewscity.controller;
 
 
 import com.egorov.bestnewscity.appService.NewsService;
+import com.egorov.bestnewscity.exception.NotFoundNewsException;
 import com.egorov.bestnewscity.model.dto.NewsDto;
 import com.egorov.bestnewscity.model.dto.NewsUpdateModel;
 import jakarta.validation.Valid;
@@ -31,7 +32,7 @@ public class NewsController {
     @GetMapping("/{id}")
     public Mono<ResponseEntity<NewsDto>> getOneNews(@PathVariable String id) {
         return newsService.findById(id).map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .switchIfEmpty(Mono.error(new NotFoundNewsException("Not found News!!!")));
     }
 
 
@@ -52,8 +53,8 @@ public class NewsController {
     @DeleteMapping("/delete/{id}")
     public Mono<ResponseEntity<Void>> deleteNews(@PathVariable String id) {
         return newsService.findById(id)
-                .flatMap(n -> newsService.deleteNews(n.getId()).then(
-                        Mono.just(new ResponseEntity<>(HttpStatus.NO_CONTENT))));
+                .flatMap(n -> newsService.deleteNews(n.getId())).then(
+                        Mono.just(new ResponseEntity<>(HttpStatus.NO_CONTENT)));
     }
 
 }

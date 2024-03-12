@@ -3,11 +3,14 @@ package com.egorov.bestnewscity.controller;
 import com.egorov.bestnewscity.appService.NewsService;
 import com.egorov.bestnewscity.exception.NotFoundNewsException;
 import com.egorov.bestnewscity.model.dto.NewsDto;
+import com.egorov.bestnewscity.model.dto.NewsUpdateModel;
 import com.egorov.bestnewscity.model.entity.CategoryNews;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,11 +23,14 @@ import reactor.test.StepVerifier;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
 @WebFluxTest(controllers = NewsController.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class NewsControllerTest {
 
     @MockBean
@@ -127,10 +133,14 @@ class NewsControllerTest {
     @Test
     void getOneNews_where_is_not_exist() {
 
-        Mockito.when(newsService.findById(Mockito.any())).thenThrow(NotFoundNewsException.class);
-        webTestClient.get().uri("/api/news/{id}", Collections.singletonMap("id", "news_id_not"))
+        Mockito.when(newsService.findById(Mockito.any())).thenThrow(new NotFoundNewsException("Not found News!!!"));
+        webTestClient.get()
+                .uri("/api/news/{id}", Collections.singletonMap("id", "news_id_not"))
                 .exchange()
-                .expectStatus().isNotFound();
+                .expectStatus().isNotFound()
+                .expectHeader().contentType("text/plain;charset=UTF-8")
+                .expectBody(String.class)
+                .consumeWith(System.out::println);
     }
 
     @Test
@@ -164,9 +174,46 @@ class NewsControllerTest {
 
     @Test
     void updateNews() {
+        NewsDto newsDto = NewsDto.builder().id("id_news").title("New title.").message("New message")
+                .author("Tom").category(List.of(CategoryNews.ECONOMIC))
+                .createDateAtNews(LocalDate.now())
+                .createTimeAtNews(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
+                .updateDateAtNews("Not updated!").build();
+
+        Mockito.when(newsService.updateNews(Mockito.any(String.class), Mockito.any(NewsUpdateModel.class))).thenReturn(Mono.just(newsDto));
+
+        webTestClient.put()
+                .uri("/api/news/update/{id}", Collections.singletonMap("id", newsDto.getId()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(newsDto), NewsDto.class)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .consumeWith(System.out::println)
+                .jsonPath("$.id").isNotEmpty()
+                .jsonPath("$.title").isEqualTo(newsDto.getTitle())
+                .jsonPath("$.message").isEqualTo(newsDto.getMessage())
+                .jsonPath("$.category").isNotEmpty();
+
     }
 
     @Test
     void deleteNews() {
+        Mono<Void> voidReturn = Mono.empty();
+        NewsDto newsDto = NewsDto.builder().id("id_news").title("New title.").message("New message")
+                .author("Tom").category(List.of(CategoryNews.ECONOMIC))
+                .createDateAtNews(LocalDate.now())
+                .createTimeAtNews(LocalTime.now().truncatedTo(ChronoUnit.MINUTES))
+                .updateDateAtNews("Not updated!").build();
+
+        Mockito.when(newsService.deleteNews(newsDto.getId())).thenReturn(voidReturn);
+
+        webTestClient.delete()
+                .uri("/api/news/delete/{id}", Collections.singletonMap("id", newsDto.getId()))
+                .exchange()
+                .expectStatus()
+                .isNoContent();
     }
 }

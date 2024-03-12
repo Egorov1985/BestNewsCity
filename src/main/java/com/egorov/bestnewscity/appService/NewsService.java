@@ -40,7 +40,7 @@ public class NewsService implements INewsService {
     public Mono<NewsDto> createdNews(NewsDto newsDto) {
         newsDto.setCreateDateAtNews(LocalDate.now());
         newsDto.setCreateTimeAtNews(LocalTime.now().truncatedTo(ChronoUnit.MINUTES));
-        newsDto.setUpdateDateAtNews("Not updated!!!");
+        newsDto.setUpdateDateAtNews("Not updated!");
 
        return newsRepository.save(MapperNews.INSTANCE.toNews(newsDto)).doOnNext(this::sendNewsAlert)
                .doOnNext(news -> newsDto.setId(news.getId()))
@@ -50,8 +50,8 @@ public class NewsService implements INewsService {
 
     @Override
     public Mono<NewsDto> findById(String id) {
-        return newsRepository.findById(id).filter(Objects::nonNull).map(MapperNews.INSTANCE::toNewsDto)
-                .switchIfEmpty(Mono.error(new NotFoundNewsException("Not found News!!!")));
+        return newsRepository.findById(id).filter(Objects::nonNull).map(MapperNews.INSTANCE::toNewsDto);
+                //.switchIfEmpty(Mono.error(new NotFoundNewsException("Not found News!!!")));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class NewsService implements INewsService {
 
     @Override
     public Mono<Void> deleteNews(String id) {
-        return newsRepository.deleteById(id).doOnSuccess(ResponseEntity::ok);
+        return newsRepository.deleteById(id).switchIfEmpty(Mono.error(new NotFoundNewsException("Not found news!")));
     }
 
     @Override
