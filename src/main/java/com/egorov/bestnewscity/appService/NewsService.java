@@ -72,21 +72,13 @@ public class NewsService implements INewsService {
     }
 
     @Override
-    public Flux<NewsDto> findByTitle(String author, List<String> category, String create) {
+    public Flux<NewsDto> findNewsByAuthorOrAndCategoryOrAndCreate(String author, List<String> category, String create) {
         if (!author.isEmpty() || !category.isEmpty() || !create.isEmpty()) {
             LocalDate searchDate = create.isEmpty() ? LocalDate.now() : LocalDate.parse(create);
             return newsRepository.findNewsByAuthorOrAndCategoryContainsIgnoreCaseOrAndCreateDateAtNews(
                     author, category, searchDate).map(MapperNews.INSTANCE::toNewsDto);
         }
         return newsRepository.findAll().map(MapperNews.INSTANCE::toNewsDto);
-    }
-
-    public News createDateAndTimeAtNews(News news) {
-
-            news.setUpdateDateAtNews("Not updated!");
-            news.setCreateDateAtNews(LocalDate.now());
-            news.setCreateTimeAtNews(LocalTime.now().truncatedTo(ChronoUnit.MINUTES));
-            return news;
     }
 
     private Mono<Void> update(News news, NewsUpdateModel newsUpdateModel) {

@@ -1,10 +1,8 @@
 package com.egorov.bestnewscity.appService;
 
 
-import com.egorov.bestnewscity.model.dto.NewsCreateModel;
 import com.egorov.bestnewscity.model.dto.NewsDto;
 import com.egorov.bestnewscity.model.dto.NewsUpdateModel;
-import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -22,7 +20,7 @@ public interface INewsService {
     Mono<Void> deleteNews(String id);
 
 
-    Flux<NewsDto> findByTitle(String title, List<String> category, String create);
+    Flux<NewsDto> findNewsByAuthorOrAndCategoryOrAndCreate(String title, List<String> category, String create);
 
 
 

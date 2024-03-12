@@ -2,8 +2,6 @@ package com.egorov.bestnewscity.controller;
 
 
 import com.egorov.bestnewscity.appService.NewsService;
-import com.egorov.bestnewscity.model.dto.MapperNews;
-import com.egorov.bestnewscity.model.dto.NewsCreateModel;
 import com.egorov.bestnewscity.model.dto.NewsDto;
 import com.egorov.bestnewscity.model.dto.NewsUpdateModel;
 import jakarta.validation.Valid;
@@ -27,7 +25,7 @@ public class NewsController {
     public Flux<NewsDto> allNews(@RequestParam (required = false, defaultValue = "") String author,
                                  @RequestParam (required = false, defaultValue = "") List<String> category,
                                  @RequestParam (required = false, defaultValue = "") String create) {
-        return newsService.findByTitle(author, category, create);
+        return newsService.findNewsByAuthorOrAndCategoryOrAndCreate(author, category, create);
     }
 
     @GetMapping("/{id}")
