@@ -16,9 +16,9 @@ services:
       - JAVA_OPTS=-Xmx512m -Xms256
     depends_on:
       mongo:
-        condition: service_healthy
+        condition: service_started
       rabbitmq:
-        condition: service_healthy
+        condition: service_started
     volumes:
       - ./src:/app/src
       - ./target:/app/target
