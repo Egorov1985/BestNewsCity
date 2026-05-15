@@ -29,7 +29,7 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
 
     @Override
     public MongoClient reactiveMongoClient() {
-        return MongoClients.create("mongodb://root:root1234@localhost:27017/");
+        return MongoClients.create("mongodb://root:root1234@mongo-news:27017/");
     }
 
 

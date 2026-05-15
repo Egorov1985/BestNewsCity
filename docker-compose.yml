@@ -38,7 +38,7 @@ services:
     container_name: 'mongo-news'
     restart: on-failure
     ports:
-      - 27017:27017
+      - "27017:27017"
     volumes:
       - mongo-data:/data/db
     environment:
@@ -50,8 +50,8 @@ services:
     container_name: 'rabbitmq-news'
     restart: on-failure
     ports:
-      - 15673:15672
-      - 5673:5672
+      - "15673:15672"
+      - "5673:5672"
     volumes:
       - rabbitmq-news-data:/var/lib/rabbitmq
     environment:

@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   rabbitmq:
-    host: localhost
+    host: rabbitmq-news
     port: 5673
     username: user
     password: 1234
