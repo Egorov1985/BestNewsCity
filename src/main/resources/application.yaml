@@ -14,5 +14,5 @@ spring:
       #username: root123
       #host: localhost
       database: "news"
-      uri: mongodb://root:root1234@localhost:27017/
+      uri: mongodb://root:root1234@mongo-news:27017/
 
