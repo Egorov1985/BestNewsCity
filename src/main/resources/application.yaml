@@ -6,4 +6,6 @@ spring:
     port: 5673
     username: user
     password: 1234
+  mongo:
+    path: "mongodb://root:root1234@mongo-news:27017/"
 

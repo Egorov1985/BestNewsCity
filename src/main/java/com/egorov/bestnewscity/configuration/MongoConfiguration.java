@@ -5,6 +5,7 @@ import com.egorov.bestnewscity.model.entity.News;
 import com.egorov.bestnewscity.repository.NewsRepository;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,8 @@ import java.util.List;
 @Configuration
 @EnableReactiveMongoRepositories(basePackages = "com.egorov.bestnewscity.repository")
 public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
+    @Value("${spring.mongo.path}")
+    private String pathMongo;
 
     @Override
     protected String getDatabaseName() {
@@ -29,7 +32,7 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
 
     @Override
     public MongoClient reactiveMongoClient() {
-        return MongoClients.create("mongodb://root:root1234@mongo-news:27017/");
+        return MongoClients.create(pathMongo);
     }
 
 
