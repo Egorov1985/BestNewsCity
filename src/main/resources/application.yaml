@@ -8,11 +8,11 @@ spring:
     password: 1234
   #mongo:
     #path: "mongodb://root:root1234@127.0.0.1:27017/"
-
   data:
     mongodb:
-      port: 27017
-      username: root123
-      #host: mongo-news
+      #port: 27017
+      #username: root123
+      #host: localhost
       database: "news"
+      uri: mongodb://root:root1234@localhost:27017/
 

@@ -30,10 +30,10 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
         return "news";
     }
 
-    /*@Override
+    @Override
     public MongoClient reactiveMongoClient() {
         return MongoClients.create(pathMongo);
-    }*/
+    }
 
 
     @Bean
