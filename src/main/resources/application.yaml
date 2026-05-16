@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   rabbitmq:
-    host: rabbitmq-news
+    host: rabbitmq
     port: 5673
     username: user
     password: 1234
@@ -14,5 +14,5 @@ spring:
       #username: root123
       #host: localhost
       database: "news"
-      uri: mongodb://root:root1234@mongo-news:27017/
+      uri: mongodb://root:root1234@mongo:27017/
 
