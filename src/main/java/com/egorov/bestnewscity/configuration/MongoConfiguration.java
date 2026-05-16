@@ -19,8 +19,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
-@Configuration
-@EnableReactiveMongoRepositories(basePackages = "com.egorov.bestnewscity.repository")
+//@Configuration
+//@EnableReactiveMongoRepositories(basePackages = "com.egorov.bestnewscity.repository")
 public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
     @Value("${spring.mongo.path}")
     private String pathMongo;
@@ -30,10 +30,10 @@ public class MongoConfiguration extends AbstractReactiveMongoConfiguration {
         return "news";
     }
 
-    @Override
+    /*@Override
     public MongoClient reactiveMongoClient() {
         return MongoClients.create(pathMongo);
-    }
+    }*/
 
 
     @Bean
