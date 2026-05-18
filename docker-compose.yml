@@ -9,8 +9,10 @@ services:
       args:
         - JAR_FILE=target/*.jar
     container_name: news-app
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
+    #ports:
+      #- "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - JAVA_OPTS=-Xmx512m -Xms256
@@ -22,8 +24,6 @@ services:
     volumes:
       - ./src:/app/src
       - ./target:/app/target
-    #networks:
-      #- app-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
@@ -32,13 +32,14 @@ services:
       retries: 3
       start_period: 40s
 
-
   mongo:
     image: 'mongo:4.4.0-rc8-bionic'
     container_name: 'mongo-news'
     restart: on-failure
-    ports:
-      - "27017:27017"
+    expose:
+      - "27017"
+    #ports:
+      #- "27017:27017"
     volumes:
       - mongo-data:/data/db
     environment:
@@ -49,9 +50,11 @@ services:
     image: 'rabbitmq:3.9.29-management-alpine'
     container_name: 'rabbitmq-news'
     restart: on-failure
-    ports:
-      - "15673:15672"
-      - "5673:5672"
+    expose:
+      - "5672"
+    #ports:
+      #- "15673:15672"
+      #- "5673:5672"
     volumes:
       - rabbitmq-news-data:/var/lib/rabbitmq
     environment:
